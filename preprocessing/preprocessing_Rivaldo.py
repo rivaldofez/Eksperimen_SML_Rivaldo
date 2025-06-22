@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def preprocess_data(data, target_column, save_path, file_path):
+def preprocess_data(data, target_column, scaler_path, column_path, numeric_column_path, labeler_path):
     # Menentukan fitur numerik dan kategoris
     numeric_features = data.select_dtypes(include=['float64', 'int64']).columns.tolist()
     categorical_features = data.select_dtypes(include=['object']).columns.tolist()
@@ -15,8 +15,7 @@ def preprocess_data(data, target_column, save_path, file_path):
     df_header = pd.DataFrame(columns=column_names)
 
     # Menyimpan nama kolom sebagai header tanpa data
-    df_header.to_csv(file_path, index=False)
-    print(f"Nama kolom berhasil disimpan ke: {file_path}")
+    df_header.to_csv(column_path, index=False)
 
     # Pastikan target_column tidak ada di numeric_features atau categorical_features
     if target_column in numeric_features:
@@ -36,6 +35,7 @@ def preprocess_data(data, target_column, save_path, file_path):
     for column in categorical_features:
         data = pd.concat([data, pd.get_dummies(data[column], prefix='class')], axis=1)
     data.drop(categorical_features, axis=1, inplace=True)
+    dump(data.drop(columns=[target_column]).columns.tolist(), labeler_path)
 
     # Memisahkan target
     X = data.drop(columns=[target_column])
@@ -47,7 +47,8 @@ def preprocess_data(data, target_column, save_path, file_path):
     scaler = StandardScaler()
     X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
     X_test[numeric_features] = scaler.transform(X_test[numeric_features])
+    dump(numeric_features, numeric_column_path)
 
     # Simpan
-    dump(scaler, save_path)
+    dump(scaler, scaler_path)
     return X_train, X_test, y_train, y_test

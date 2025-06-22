@@ -1,7 +1,7 @@
 import pandas as pd
 from preprocessing_Rivaldo import *
  
-data = pd.read_csv("../co2emissions_raw.csv")
+data = pd.read_csv("co2emissions_raw.csv")
 data.drop(["Make", "Model"], axis=1, inplace=True)
 X_train, X_test, y_train, y_test = preprocess_data(data, 'CO2 Emissions(g/km)', 'scaler.joblib', 'co2emissions_preprocessing/columns.csv')
 

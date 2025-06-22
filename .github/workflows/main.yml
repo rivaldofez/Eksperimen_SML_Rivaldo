@@ -7,14 +7,14 @@ on:
 
 jobs:
   preprocess:
-    if: github.actor != 'github-actions[bot]'  # Prevent self-triggering
+    if: "!contains(github.event.head_commit.message, '[AUTO]')"  # Prevent self-trigger loop
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        persist-credentials: false  # We'll use PAT for push
+        persist-credentials: false  # Disable default GitHub token for push
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -31,11 +31,11 @@ jobs:
 
     - name: Commit and push changes
       env:
-        TOKEN: ${{ secrets.GH_PAT }}
+        TOKEN: ${{ secrets.GH_PAT }}  # Your GitHub PAT (set in repo secrets)
       run: |
         git config user.name "Automated Preprocessor"
         git config user.email "actions@github.com"
         git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git
         git add .
-        git diff --cached --quiet || git commit -m "Automated preprocessing result"
+        git diff --cached --quiet || git commit -m "[AUTO] Automated preprocessing result"
         git push

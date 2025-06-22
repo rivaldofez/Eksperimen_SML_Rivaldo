@@ -11,15 +11,13 @@ print("Files before saving:", os.listdir())
 
 output_dir = os.path.join(os.getcwd(), "co2emissions_preprocessing")
 os.makedirs(output_dir, exist_ok=True)
-X_train, X_test, y_train, y_test = preprocess_data(data, 'CO2 Emissions(g/km)', 'scaler.joblib', 'os.path.join(output_dir, "columns.csv")')
+X_train, X_test, y_train, y_test = preprocess_data(data, 'CO2 Emissions(g/km)', 'scaler.joblib', os.path.join(output_dir, "columns.csv"))
 
 train_processed = pd.DataFrame(X_train)
 train_processed['target'] = y_train
 
 test_processed = pd.DataFrame(X_test)
 test_processed['target'] = y_test
-
-
 
 train_processed.to_csv(os.path.join(output_dir, "train_processed.csv"), index=False)
 test_processed.to_csv(os.path.join(output_dir, "test_processed.csv"), index=False)

@@ -1,5 +1,6 @@
 import pandas as pd
 from preprocessing_Rivaldo import *
+import os
  
 data = pd.read_csv("co2emissions_raw.csv")
 data.drop(["Make", "Model"], axis=1, inplace=True)
@@ -11,5 +12,6 @@ train_processed['target'] = y_train
 test_processed = pd.DataFrame(X_test)
 test_processed['target'] = y_test
 
+os.makedirs("co2emissions_preprocessing", exist_ok=True)
 train_processed.to_csv("co2emissions_preprocessing/train_processed.csv", index=False)
 test_processed.to_csv("co2emissions_preprocessing/test_processed.csv", index=False)

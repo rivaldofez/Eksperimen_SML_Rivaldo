@@ -12,6 +12,11 @@ train_processed['target'] = y_train
 test_processed = pd.DataFrame(X_test)
 test_processed['target'] = y_test
 
-os.makedirs("co2emissions_preprocessing", exist_ok=True)
-train_processed.to_csv("co2emissions_preprocessing/train_processed.csv", index=False)
-test_processed.to_csv("co2emissions_preprocessing/test_processed.csv", index=False)
+
+print("Current working directory:", os.getcwd())
+print("Files before saving:", os.listdir())
+
+output_dir = os.path.join(os.getcwd(), "co2emissions_preprocessing")
+os.makedirs(output_dir, exist_ok=True)
+train_processed.to_csv(os.path.join(output_dir, "train_processed.csv"), index=False)
+test_processed.to_csv(os.path.join(output_dir, "test_processed.csv"), index=False)
